@@ -11,3 +11,15 @@ app.enable('trust proxy')
 app.get('/', authenticate, params, proxy)
 app.get('/favicon.ico', (req, res) => res.status(204).end())
 app.listen(PORT, () => console.log(`Listening on ${PORT}`))
+const express = require('express');
+const app = express();
+
+const PORT = process.env.PORT || 8080;
+
+app.get('/', (req, res) => {
+  res.send('Hello World!');
+});
+
+app.listen(PORT, () => {
+  console.log(`Listening on ${PORT}`);
+});
