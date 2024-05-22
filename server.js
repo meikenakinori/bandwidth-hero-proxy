@@ -1,26 +1,13 @@
-const express = require('express');
-const authenticate = require('./authenticate'); // 確保路徑正確
-const params = require('./params'); // 確保路徑正確
-const proxy = require('./proxy'); // 確保路徑正確
+#!/usr/bin/env node
+'use strict'
+const app = require('express')()
+const authenticate = require('./src/authenticate')
+const params = require('./src/params')
+const proxy = require('./src/proxy')
 
-const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8080
 
-app.use(authenticate);
-app.use(params);
-app.use(proxy);
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-
-// 全局錯誤處理
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).send('Something broke!');
-});
-
-app.listen(PORT, () => {
-  console.log(`Listening on ${PORT}`);
-});
-
+app.enable('trust proxy')
+app.get('/', authenticate, params, proxy)
+app.get('/favicon.ico', (req, res) => res.status(204).end())
+app.listen(PORT, () => console.log(`Listening on ${PORT}`))
